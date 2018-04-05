@@ -86,6 +86,8 @@ with tf.Graph().as_default() as graph:
         correct_prediction = tf.equal(tf.argmax(predicted_label, 1), tf.argmax(y_, 1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
         tf.summary.scalar('accuracy', accuracy)
+    with tf.name_scope('Confusion_Matrix'):
+        confusion_matrix = tf.confusion_matrix(labels=tf.argmax(y_, 1), predictions=tf.argmax(predicted_label, 1))
 
 with tf.Session(graph=graph) as sess:
     merge_summary = tf.summary.merge_all()
@@ -117,12 +119,14 @@ with tf.Session(graph=graph) as sess:
             summary, acc = sess.run([merge_summary, accuracy], feed_dict=feed_dict_val)
             val_writer.add_summary(summary, i)
             print('Validation accuracy at epoch %s: %s' %(i, acc))
-            if (acc > 0.95):
+            if (acc > 0.90):
                 break
         else:
-            summary, _ = sess.run([merge_summary, optimizer], feed_dict=feed_dict_train)
+            summary, _, acc3 = sess.run([merge_summary, optimizer, accuracy], feed_dict=feed_dict_train)
             train_writer.add_summary(summary, i)
-    summary, acc2 = sess.run([merge_summary, accuracy], feed_dict=feed_dict_test)
-    test_writer.add_summary(summary)
+    summary, acc2, confMaX = sess.run([merge_summary, accuracy, confusion_matrix], feed_dict=feed_dict_test)
+    # test_writer.add_summary(summary)
     print("Test accuracy is: %s" %acc2)
+    print("The test confusion matrix is ")
+    print(confMaX)
 
