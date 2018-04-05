@@ -3,7 +3,7 @@ In the [previous work][BP], we built a fully connected multilayer perception (ML
 The "observing-adjusting-observing" method seems to be kinda brute-force, but most time it makes a lot of sense if we can accelerate the calculation process by using some deep learning frameworks, such as [TensorFLow][TF], [PyTorch][Torch], [Keras][Keras], etc. These frameworks can accelerate the tedious matrices calculation by optimizing and distributing them at the backend, and ever taking advantage of the advanced hardware architecture (e.g. GPUs). Here, I used the TensorFlow to reproduce the [previous work][BP], I would like to share some my personal feelings in the process of making my hands dirty as a beginner:
   
   1. TensorFlow is a good choice for deep learning research, at least for me. It's built in a low-level (C++), which means a high flexibility for coding. Actually, the coding logic is as the same as building a computation graph.
-  2. Visualization is very very very friendly by using `tensorboard`. 
+  2. Visualization is very very very friendly by using `tensorboard`, by call "tensorboard --logdir=.\log" in the `Terminal`. 
   3. By using the `name_scope` to control the computation graph and `variable_scope` to reuse the shared variables (especially happened in RNNs), the logic flow is very clear.
   4. If I too lazy to invite the wheel for some fundamental function (e.g. MLP here), it also totally fine. The modules embedded in TensorFlow is keep growing rapidly, such as `tf.contrib`, `tf.initializers`, `tf.keras`, etc. 
   5. Easy to manually distribute the computation in different hardwares by using simple lines, e.g. `with tf.device("/gpu:0"):`.
