@@ -52,7 +52,7 @@ train_data, train_label, val_data, val_label, test_data, test_label = load_data(
 # train : validation : test = 6 : 2 ：2
 """ Here are some hyper-parameters: """
 batch_size = 100 # Here we applied the mini-batch gradient decsend
-epoches = 30000
+epoches = 300
 
 with tf.Graph().as_default() as graph:
     ''' Now let's construct the conputation graph, in TensorFlow, all the compulational processes will follow the graph. '''
@@ -86,14 +86,11 @@ with tf.Graph().as_default() as graph:
         correct_prediction = tf.equal(tf.argmax(predicted_label, 1), tf.argmax(y_, 1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
         tf.summary.scalar('accuracy', accuracy)
-    with tf.name_scope('Confusion_Matrix'):
-        confusion_matrix = tf.confusion_matrix(labels=tf.argmax(y_, 1), predictions=tf.argmax(predicted_label, 1))
 
 with tf.Session(graph=graph) as sess:
     merge_summary = tf.summary.merge_all()
     train_writer = tf.summary.FileWriter("log/train", sess.graph)
     val_writer = tf.summary.FileWriter("log/validation", sess.graph)
-    test_writer = tf.summary.FileWriter("log/test", sess.graph)
     tf.global_variables_initializer().run()
 
     for i in range(epoches):
@@ -119,14 +116,11 @@ with tf.Session(graph=graph) as sess:
             summary, acc = sess.run([merge_summary, accuracy], feed_dict=feed_dict_val)
             val_writer.add_summary(summary, i)
             print('Validation accuracy at epoch %s: %s' %(i, acc))
-            if (acc > 0.90):
+            if (acc > 0.95):
                 break
         else:
-            summary, _, acc3 = sess.run([merge_summary, optimizer, accuracy], feed_dict=feed_dict_train)
+            summary, _ = sess.run([merge_summary, optimizer], feed_dict=feed_dict_train)
             train_writer.add_summary(summary, i)
-    summary, acc2, confMaX = sess.run([merge_summary, accuracy, confusion_matrix], feed_dict=feed_dict_test)
-    # test_writer.add_summary(summary)
+    summary, acc2 = sess.run([merge_summary, accuracy], feed_dict=feed_dict_test)
     print("Test accuracy is: %s" %acc2)
-    print("The test confusion matrix is ")
-    print(confMaX)
 
