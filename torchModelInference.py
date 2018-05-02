@@ -9,6 +9,7 @@ import numpy as np
 
 " http://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html#sphx-glr-beginner-blitz-cifar10-tutorial-py "
 " http://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html "
+" Dataset Download: https://download.pytorch.org/tutorial/hymenoptera_data.zip "
 
 def imshow(img):
     mean = np.array([0.5, 0.5, 0.5])
